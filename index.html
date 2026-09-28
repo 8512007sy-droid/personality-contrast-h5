@@ -1,0 +1,761 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#F7F3EE" />
+    <meta name="description" content="12 道生活情境题，测出你的外在人设和隐藏人格，看看别人眼里的你和真正的你到底差多远。" />
+    <meta property="og:title" content="别人眼里的你 VS 真正的你｜人格反差测试" />
+    <meta property="og:description" content="测测别人眼里的你 VS 真正的你。" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23F7F3EE'/%3E%3Ccircle cx='25' cy='32' r='18' fill='%23FF7585' fill-opacity='.82'/%3E%3Ccircle cx='39' cy='32' r='18' fill='%236E67F4' fill-opacity='.82'/%3E%3Cpath d='M32 18v28' stroke='%23211D1B' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E" />
+    <title>别人眼里的你 VS 真正的你｜人格反差测试</title>
+    <style>
+:root {
+  --bg: #f7f3ee;
+  --surface: #fffdfc;
+  --text-primary: #211d1b;
+  --text-secondary: #7b716b;
+  --border: #e9e1da;
+  --outer-primary: #ff7585;
+  --outer-light: #ffe4e7;
+  --outer-soft: #fff1f2;
+  --inner-primary: #6e67f4;
+  --inner-light: #e8e6ff;
+  --inner-soft: #f2f1ff;
+  --highlight: #ffd369;
+  --highlight-light: #fff3c9;
+  --cta: #25201e;
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --shadow: 0 18px 50px rgba(38, 30, 26, 0.08);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+  font-synthesis: none;
+}
+
+* { box-sizing: border-box; }
+
+html { min-height: 100%; background: var(--bg); }
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(circle at 2% 4%, rgba(255, 117, 133, 0.08), transparent 26rem),
+    radial-gradient(circle at 98% 48%, rgba(110, 103, 244, 0.08), transparent 24rem),
+    var(--bg);
+  overflow-x: hidden;
+}
+
+button { font: inherit; }
+
+button:focus-visible { outline: 3px solid rgba(110, 103, 244, 0.35); outline-offset: 3px; }
+
+.app-shell {
+  width: min(100%, 560px);
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: max(20px, env(safe-area-inset-top)) 20px max(24px, env(safe-area-inset-bottom));
+}
+
+.view { display: none; min-height: calc(100vh - 44px); }
+.view.is-active { display: flex; animation: view-in 0.48s cubic-bezier(.2,.8,.2,1) both; }
+
+.landing-view { flex-direction: column; justify-content: space-between; gap: 20px; }
+
+.landing-top,
+.quiz-header,
+.result-header { display: flex; align-items: center; justify-content: space-between; }
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: #625853;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.eyebrow-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--outer-primary), var(--inner-primary));
+  box-shadow: 0 0 0 5px rgba(255, 117, 133, 0.1);
+}
+
+.resume-button {
+  border: 0;
+  padding: 8px 11px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.64);
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.is-hidden { display: none !important; }
+
+.mirror-art {
+  position: relative;
+  width: 284px;
+  height: 205px;
+  margin: 8px auto -4px;
+}
+
+.mirror-card {
+  position: absolute;
+  top: 13px;
+  width: 166px;
+  height: 176px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  border-radius: 34px;
+  box-shadow: 0 22px 55px rgba(65, 47, 54, 0.13);
+  border: 1px solid rgba(255,255,255,.75);
+}
+
+.mirror-card span { font-size: 11px; font-weight: 700; letter-spacing: .12em; }
+.mirror-card strong { font-family: Georgia, "Times New Roman", serif; font-size: 32px; line-height: 1; }
+.mirror-card-outer { left: 5px; transform: rotate(-8deg); background: var(--outer-light); color: #c64c5d; }
+.mirror-card-inner { right: 5px; transform: rotate(8deg); background: var(--inner-light); color: #5149d2; text-align: right; }
+
+.mirror-center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  transform: translate(-50%, -50%) rotate(-5deg);
+  border-radius: 50%;
+  background: var(--cta);
+  color: #fff;
+  font: italic 700 21px Georgia, serif;
+  box-shadow: 0 12px 24px rgba(37, 32, 30, .2);
+}
+
+.spark { position: absolute; z-index: 3; font-style: normal; }
+.spark-one { top: -5px; right: 18px; color: var(--inner-primary); font-size: 26px; }
+.spark-two { bottom: 3px; left: 21px; color: var(--outer-primary); font-size: 20px; }
+.spark-three { right: -3px; bottom: 35px; width: 15px; height: 15px; border: 2px solid var(--highlight); border-radius: 50%; color: transparent; }
+
+.landing-copy { text-align: center; }
+.kicker { margin: 0 0 12px; color: var(--text-secondary); font-size: 12px; letter-spacing: .04em; }
+
+.landing-copy h1 {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  font-size: clamp(36px, 10.4vw, 54px);
+  line-height: 1.03;
+  letter-spacing: -.055em;
+}
+
+.landing-copy h1 em { margin: 5px 0 3px; color: var(--text-primary); font: italic 600 20px/1 Georgia, serif; letter-spacing: 0; }
+.warm-text { color: #d95666; }
+.cool-text { color: #5c55df; }
+.hook-copy { margin: 21px auto 0; color: #665c57; font-size: 14px; line-height: 1.72; }
+.hook-copy p { margin: 0; }
+.hook-copy strong { display: block; margin-top: 5px; color: var(--text-primary); }
+
+.landing-actions { display: grid; gap: 13px; }
+.primary-button,
+.secondary-button {
+  width: 100%;
+  min-height: 58px;
+  border-radius: 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.primary-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 0;
+  padding: 0 19px 0 24px;
+  background: var(--cta);
+  color: #fff;
+  box-shadow: 0 13px 28px rgba(37, 32, 30, .18);
+}
+
+.primary-button:hover { transform: translateY(-1px); }
+.primary-button:active { transform: scale(.985); }
+.button-arrow { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,.12); font-size: 17px; }
+.meta-line { display: flex; justify-content: center; align-items: center; gap: 10px; margin: 0; color: #918680; font-size: 11px; }
+.meta-line i { width: 3px; height: 3px; background: #c9beb8; border-radius: 50%; }
+
+.quiz-view { flex-direction: column; }
+.quiz-header { height: 42px; }
+.icon-button { display: grid; place-items: center; width: 38px; height: 38px; border: 1px solid var(--border); border-radius: 50%; background: rgba(255,255,255,.5); color: var(--text-primary); font-size: 21px; cursor: pointer; }
+.progress-copy { display: flex; align-items: baseline; margin-left: 34px; }
+.progress-copy strong { font-size: 17px; }
+.progress-copy span { color: #a0958f; font-size: 12px; }
+.quiz-label { color: #918680; font-size: 10px; letter-spacing: .12em; }
+.progress-track { height: 3px; margin: 18px 0 34px; overflow: hidden; border-radius: 99px; background: #e9e1da; }
+.progress-track span { display: block; width: 8.33%; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--outer-primary), var(--inner-primary)); transition: width .4s ease; }
+
+.question-card { flex: 1; }
+.question-card.is-changing { animation: question-in .35s ease both; }
+.question-mark { display: flex; align-items: center; gap: 12px; margin-bottom: 17px; }
+.question-mark span { color: var(--outer-primary); font-size: 12px; font-weight: 800; letter-spacing: .14em; }
+.question-mark i { width: 36px; height: 1px; background: var(--outer-primary); opacity: .5; }
+.question-card h2 { margin: 0 0 27px; font-size: clamp(23px, 6.5vw, 30px); line-height: 1.38; letter-spacing: -.035em; }
+.answer-list { display: grid; gap: 12px; }
+.answer-option {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 64px;
+  padding: 13px 16px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: rgba(255,253,252,.83);
+  color: var(--text-primary);
+  text-align: left;
+  box-shadow: 0 8px 24px rgba(38,30,26,.035);
+  cursor: pointer;
+  transition: transform .18s ease, border-color .18s ease, background .18s ease, color .18s ease;
+}
+.answer-option:hover { transform: translateY(-1px); border-color: #cfc2ba; }
+.answer-option:active { transform: scale(.98); }
+.answer-option.is-selected { background: var(--cta); border-color: var(--cta); color: #fff; box-shadow: 0 12px 26px rgba(37,32,30,.16); }
+.option-letter { flex: 0 0 auto; display: grid; place-items: center; width: 30px; height: 30px; margin-right: 13px; border: 1px solid #ded4cd; border-radius: 50%; color: #958983; font: 700 12px Georgia, serif; }
+.answer-option.is-selected .option-letter { background: #fff; border-color: #fff; color: var(--cta); }
+.option-copy { font-size: 14px; line-height: 1.55; }
+.option-check { margin-left: auto; padding-left: 10px; opacity: 0; }
+.answer-option.is-selected .option-check { opacity: 1; }
+
+.quiz-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 25px; color: #aaa09a; font-size: 11px; }
+.text-button { border: 0; padding: 10px 0; background: transparent; color: var(--text-secondary); cursor: pointer; }
+.text-button:disabled { opacity: .3; cursor: default; }
+
+.reveal-view { flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.reveal-orbit { position: relative; width: 180px; height: 180px; margin-bottom: 36px; }
+.reveal-disc { position: absolute; top: 25px; width: 126px; height: 126px; border-radius: 45%; mix-blend-mode: multiply; animation: orbit 1.6s ease-in-out infinite alternate; }
+.reveal-disc-outer { left: 3px; background: var(--outer-light); transform: rotate(-14deg); }
+.reveal-disc-inner { right: 3px; background: var(--inner-light); transform: rotate(14deg); animation-delay: -.8s; }
+.reveal-orbit > span { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); color: var(--text-primary); font-size: 38px; }
+.reveal-view h2 { margin: 20px 0 26px; font-size: 25px; letter-spacing: -.03em; }
+.loading-line { width: 200px; height: 3px; overflow: hidden; border-radius: 99px; background: var(--border); }
+.loading-line span { display: block; width: 46%; height: 100%; border-radius: inherit; background: linear-gradient(90deg,var(--outer-primary),var(--inner-primary)); animation: loading 1.2s ease-in-out infinite; }
+
+.result-view { flex-direction: column; }
+.result-header { min-height: 42px; margin-bottom: 18px; }
+.result-header > span { color: #8d817b; font-size: 10px; font-weight: 700; letter-spacing: .15em; }
+.result-hero { position: relative; overflow: hidden; padding: 26px 20px 22px; border: 1px solid rgba(255,255,255,.8); border-radius: 29px; background: var(--surface); box-shadow: var(--shadow); }
+.result-hero::before { content: ""; position: absolute; left: 0; top: 0; width: 100%; height: 5px; background: linear-gradient(90deg,var(--outer-primary),#b18cff,var(--inner-primary)); }
+.result-hero::after { content: ""; position: absolute; right: -70px; top: 78px; width: 180px; height: 180px; border: 28px solid rgba(110,103,244,.045); border-radius: 50%; pointer-events: none; }
+.result-stamp { display: inline-flex; padding: 7px 12px; border-radius: 99px; background: var(--highlight-light); color: #7f651a; font-size: 11px; font-weight: 700; letter-spacing: .08em; }
+.result-overline { margin: 22px 0 8px; color: var(--text-secondary); font-size: 12px; }
+.result-overline span { margin: 0 5px; color: var(--inner-primary); }
+.result-hero > h1 { position: relative; z-index: 1; margin: 0; font-size: clamp(44px, 13vw, 66px); line-height: 1.08; letter-spacing: -.07em; }
+.result-tagline { position: relative; z-index: 1; margin: 14px 0 25px; max-width: 92%; color: #5f5550; font-size: 15px; font-weight: 600; line-height: 1.65; }
+.contrast-row { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px; border-radius: 20px; background: #292320; color: #fff; }
+.contrast-row strong { font-size: 34px; letter-spacing: -.04em; }
+.contrast-row strong span { margin-left: 2px; font-size: 17px; }
+.contrast-row p { margin: 2px 0 0; color: #c7bbb4; font-size: 10px; letter-spacing: .08em; }
+.contrast-ring { display: grid; place-items: center; width: 48px; height: 48px; border: 2px solid rgba(255,255,255,.14); border-top-color: var(--highlight); border-right-color: var(--outer-primary); border-radius: 50%; transform: rotate(35deg); }
+.contrast-ring span { width: 6px; height: 6px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 7px rgba(255,255,255,.08); }
+.dual-result { display: grid; gap: 12px; margin-top: 13px; }
+.personality-panel { position: relative; padding: 18px; border-radius: 20px; }
+.outer-panel { background: var(--outer-soft); }
+.inner-panel { background: var(--inner-soft); }
+.panel-label { display: block; margin-bottom: 9px; font-size: 9px; font-weight: 800; letter-spacing: .13em; }
+.outer-panel .panel-label { color: #d95a69; }
+.inner-panel .panel-label { color: #5a52dc; }
+.personality-panel h2 { margin: 0 0 7px; font-size: 21px; letter-spacing: -.03em; }
+.personality-panel p { margin: 0; color: #655b56; font-size: 12px; line-height: 1.7; }
+.personality-panel blockquote { margin: 12px 0 0; padding-top: 12px; border-top: 1px solid rgba(110,103,244,.15); color: #5149c9; font-size: 12px; font-weight: 700; line-height: 1.6; }
+.keyword-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 20px; }
+.keyword-list span { padding: 7px 11px; border: 1px solid var(--border); border-radius: 99px; color: #716660; font-size: 11px; }
+.share-signature { display: flex; align-items: center; gap: 9px; color: #988d87; }
+.share-signature > span { font: 700 8px Georgia, serif; letter-spacing: .1em; }
+.share-signature i { flex: 1; height: 1px; background: var(--border); }
+.share-signature small { max-width: 180px; font-size: 8px; line-height: 1.4; text-align: right; }
+.result-actions { display: grid; grid-template-columns: 1.65fr 1fr; gap: 10px; margin-top: 15px; }
+.result-actions .primary-button { min-height: 54px; }
+.secondary-button { min-height: 54px; border: 1px solid #d8cec7; background: transparent; color: var(--text-primary); }
+.disclaimer { margin: 18px 8px 0; color: #a09792; font-size: 9px; line-height: 1.6; text-align: center; }
+.toast { position: fixed; left: 50%; bottom: 28px; z-index: 20; max-width: calc(100% - 40px); padding: 11px 16px; border-radius: 999px; background: rgba(37,32,30,.94); color: #fff; font-size: 12px; transform: translate(-50%, 16px); opacity: 0; pointer-events: none; transition: .25s ease; }
+.toast.is-visible { transform: translate(-50%, 0); opacity: 1; }
+
+@keyframes view-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes question-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes orbit { to { transform: translateX(12px) rotate(20deg); } }
+@keyframes loading { from { transform: translateX(-105%); } to { transform: translateX(320%); } }
+
+@media (min-width: 620px) {
+  .app-shell { min-height: auto; padding: 34px 20px; }
+  .view { min-height: 760px; }
+  .result-view { min-height: auto; }
+  .dual-result { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-height: 710px) {
+  .mirror-art { transform: scale(.82); margin-top: -14px; margin-bottom: -24px; }
+  .hook-copy { margin-top: 12px; line-height: 1.55; }
+  .landing-copy h1 { font-size: 36px; }
+  .question-card h2 { margin-bottom: 18px; }
+  .answer-list { gap: 9px; }
+  .answer-option { min-height: 58px; padding-block: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+
+</style>
+  </head>
+  <body>
+    <main class="app-shell">
+      <section id="landing" class="view landing-view is-active" aria-labelledby="landing-title">
+        <div class="landing-top">
+          <div class="eyebrow"><span class="eyebrow-dot"></span>人格反差测试</div>
+          <button id="resume-button" class="resume-button is-hidden" type="button">继续上次测试 <span>→</span></button>
+        </div>
+
+        <div class="mirror-art" aria-hidden="true">
+          <div class="mirror-card mirror-card-outer">
+            <span>别人眼里的你</span>
+            <strong>看起来</strong>
+          </div>
+          <div class="mirror-card mirror-card-inner">
+            <span>真正的你</span>
+            <strong>其实是</strong>
+          </div>
+          <div class="mirror-center">VS</div>
+          <i class="spark spark-one">✦</i>
+          <i class="spark spark-two">✦</i>
+          <i class="spark spark-three">·</i>
+        </div>
+
+        <div class="landing-copy">
+          <p class="kicker">你的人设，可能和你本人完全不是一回事。</p>
+          <h1 id="landing-title">
+            <span class="warm-text">别人眼里的你</span>
+            <em>VS</em>
+            <span class="cool-text">真正的你</span>
+          </h1>
+          <div class="hook-copy">
+            <p>有些人看起来很佛，其实胜负欲比谁都强。</p>
+            <p>有些人看起来很冷，其实比谁都重感情。</p>
+            <strong>那你呢？</strong>
+          </div>
+        </div>
+
+        <div class="landing-actions">
+          <button id="start-button" class="primary-button" type="button">
+            <span>开始测试</span><span class="button-arrow">↗</span>
+          </button>
+          <p class="meta-line"><span>约 2 分钟</span><i></i><span>12 题</span><i></i><span>娱乐测试</span></p>
+        </div>
+      </section>
+
+      <section id="quiz" class="view quiz-view" aria-live="polite" aria-labelledby="question-title">
+        <header class="quiz-header">
+          <button id="quiz-close" class="icon-button" type="button" aria-label="返回首页">×</button>
+          <div class="progress-copy"><strong id="progress-current">01</strong><span>/ 12</span></div>
+          <span class="quiz-label">人格反差测试</span>
+        </header>
+        <div class="progress-track" aria-hidden="true"><span id="progress-bar"></span></div>
+
+        <article id="question-card" class="question-card">
+          <div class="question-mark"><span id="question-number">Q1</span><i></i></div>
+          <h2 id="question-title"></h2>
+          <div id="answer-list" class="answer-list" role="radiogroup" aria-label="请选择一个答案"></div>
+        </article>
+
+        <footer class="quiz-footer">
+          <button id="previous-button" class="text-button" type="button">← 上一题</button>
+          <span>跟着第一直觉选就好</span>
+        </footer>
+      </section>
+
+      <section id="reveal" class="view reveal-view" aria-live="assertive">
+        <div class="reveal-orbit" aria-hidden="true">
+          <div class="reveal-disc reveal-disc-outer"></div>
+          <div class="reveal-disc reveal-disc-inner"></div>
+          <span>✦</span>
+        </div>
+        <p class="eyebrow"><span class="eyebrow-dot"></span>人格正在显影</p>
+        <h2 id="reveal-copy">正在拆掉你的人设……</h2>
+        <div class="loading-line"><span></span></div>
+      </section>
+
+      <section id="result" class="view result-view" aria-labelledby="result-title">
+        <header class="result-header">
+          <button id="result-home" class="icon-button" type="button" aria-label="返回首页">⌂</button>
+          <span>人格反差测试 · RESULT</span>
+          <button id="result-more" class="icon-button" type="button" aria-label="分享结果">↗</button>
+        </header>
+
+        <article id="share-card" class="result-hero">
+          <div class="result-stamp">你的反差人格</div>
+          <p class="result-overline">别人眼里的你 <span>×</span> 真正的你</p>
+          <h1 id="result-title">外佛内卷</h1>
+          <p id="result-tagline" class="result-tagline"></p>
+
+          <div class="contrast-row">
+            <div>
+              <strong id="contrast-value">94<span>%</span></strong>
+              <p>娱乐向人格反差指数</p>
+            </div>
+            <div class="contrast-ring" aria-hidden="true"><span></span></div>
+          </div>
+
+          <div class="dual-result">
+            <div class="personality-panel outer-panel">
+              <span class="panel-label">OUTER · 别人眼里的你</span>
+              <h2 id="outer-name"></h2>
+              <p id="outer-description"></p>
+            </div>
+            <div class="personality-panel inner-panel">
+              <span class="panel-label">INNER · 真正的你</span>
+              <h2 id="inner-name"></h2>
+              <p id="inner-description"></p>
+              <blockquote id="inner-quote"></blockquote>
+            </div>
+          </div>
+
+          <div id="keyword-list" class="keyword-list" aria-label="人格关键词"></div>
+          <div class="share-signature"><span>PERSONALITY MIRROR</span><i></i><small>你的外在人设是真的，隐藏的那一面也是真的。</small></div>
+        </article>
+
+        <div class="result-actions">
+          <button id="share-button" class="primary-button" type="button"><span>生成分享卡片</span><span>↗</span></button>
+          <button id="restart-button" class="secondary-button" type="button">再测一次</button>
+        </div>
+        <p class="disclaimer">本测试仅供娱乐与自我探索，不属于专业心理测评或医学诊断。</p>
+      </section>
+    </main>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <canvas id="share-canvas" width="1080" height="1440" hidden></canvas>
+    <script>
+const QUESTIONS = [
+  ["到了一个几乎没有熟人的聚会，你通常会：", [["先找一个看起来比较好相处的人聊","WARM","DEEP"],["不急，先观察一圈再说","DISTANT","SENSITIVE"],["很快就能跟旁边的人聊起来","SOCIAL","FREE"],["找个舒服的位置待着，有人来聊就聊","RELAXED","BOUNDARY"]]],
+  ["朋友临时取消了你们约好的计划，你第一反应更接近：", [["“没关系啦，你先忙你的。”","WARM","DEEP"],["“行。”然后默默重新安排自己的时间","CALM","STRATEGIST"],["“啊？为什么！我都准备好了！”","SOCIAL","SENSITIVE"],["其实有一点开心，突然多出了自己的时间","RELAXED","FREE"]]],
+  ["四个人一起做一件事，但大家一直没人推进，你会：", [["先提醒一下：“我们是不是该开始了？”","WARM","BOUNDARY"],["自己梳理一下步骤，然后告诉大家怎么分工","CAPABLE","STRATEGIST"],["一边吐槽一边把气氛带起来，让大家赶紧干活","SOCIAL","FREE"],["如果真的没人弄，我再出手","CALM","AMBITIOUS"]]],
+  ["有人突然当着很多人的面夸你，你通常会：", [["有点不好意思：“哪有啦。”","WARM","SENSITIVE"],["笑一下，说声谢谢","CALM","BOUNDARY"],["“终于被你发现了。”","SOCIAL","FREE"],["表面很淡定，但之后可能会偷偷开心很久","DISTANT","DEEP"]]],
+  ["群里突然有人说了一句话，让你感觉是在阴阳你，你更可能：", [["先想是不是自己理解错了","WARM","SENSITIVE"],["不急着回，看看对方接下来怎么说","CALM","STRATEGIST"],["当场用一句玩笑顶回去","SOCIAL","BOUNDARY"],["不回应，但心里会把这件事记下来","DISTANT","DEEP"]]],
+  ["一个完全属于你的周末，你最舒服的状态是：", [["和喜欢的人见面、吃饭、聊天","WARM","DEEP"],["做一些拖了很久的事情，清空待办","CAPABLE","AMBITIOUS"],["临时决定去哪儿玩，最好发生点新鲜事","SOCIAL","FREE"],["什么都不安排，想干嘛干嘛","RELAXED","BOUNDARY"]]],
+  ["你已经很累了，但朋友突然找你帮忙：", [["如果真的很需要我，我大概率还是会帮","WARM","DEEP"],["先判断事情急不急，再决定","CALM","STRATEGIST"],["嘴上会说“你怎么又来了”，但可能还是会帮","SOCIAL","SENSITIVE"],["如果超过我的承受范围，我会直接拒绝","DISTANT","BOUNDARY"]]],
+  ["你刚认识一个人，通常最先注意到的是：", [["TA 对别人说话的态度","WARM","SENSITIVE"],["TA 做事有没有逻辑","CALM","STRATEGIST"],["TA 有没有趣、聊不聊得来","SOCIAL","FREE"],["TA 有没有让你觉得舒服","DISTANT","DEEP"]]],
+  ["一个关系很好的朋友突然说：“我感觉你最近怪怪的。”你的第一反应：", [["“有吗？”然后开始想自己是不是哪里不对","WARM","SENSITIVE"],["“怎么怪？”想听听对方观察到了什么","CALM","STRATEGIST"],["“你才怪。”先开个玩笑","SOCIAL","BOUNDARY"],["会突然有种“居然被你看出来了”的感觉","DISTANT","DEEP"]]],
+  ["面对一个很重要、但风险也很大的机会，你更可能：", [["先问问自己信任的人怎么看","WARM","DEEP"],["把利弊全部列出来再决定","CALM","STRATEGIST"],["先试了再说，大不了再调整","CAPABLE","AMBITIOUS"],["除非我自己真的很想，否则不会因为别人觉得好就选","RELAXED","FREE"]]],
+  ["如果有人误解了你，你通常会：", [["如果是重要的人，我会解释","WARM","DEEP"],["看这个误解有没有实际影响，有就解释","CALM","STRATEGIST"],["直接说清楚，我受不了别人乱猜","CAPABLE","BOUNDARY"],["有时候懒得解释，你怎么想是你的事","DISTANT","FREE"]]],
+  ["有一天你突然发现：一个一直很亲近的人并没有你想象中那么在乎你。", [["先难过，然后反思是不是哪里出了问题","WARM","SENSITIVE"],["慢慢降低投入，不会立刻翻脸","CALM","STRATEGIST"],["难受归难受，但会逼自己尽快翻篇","CAPABLE","AMBITIOUS"],["一旦确定了，就会把心理距离拉开","DISTANT","BOUNDARY"]]]
+].map(([text, options], index) => ({ id: index + 1, text, options: options.map(([text, outer, inner], optionIndex) => ({ id: "ABCD"[optionIndex], text, outer, inner })) }));
+
+const OUTER = {
+  WARM: { name: "温柔好相处型", description: "你给人的第一印象通常没有攻击性。你会顾及气氛，也会留意别人舒不舒服。", keywords: ["温柔","体贴","有分寸"] },
+  CALM: { name: "冷静靠谱型", description: "别人觉得你遇事很稳。你给人的感觉通常是：先处理事情，再处理情绪。", keywords: ["理性","稳定","靠谱"] },
+  SOCIAL: { name: "有梗社交型", description: "你的表达、幽默感和反应速度很容易被人记住，比自己想象中更有存在感。", keywords: ["有趣","鲜活","存在感"] },
+  RELAXED: { name: "松弛随性型", description: "你不喜欢为小事反复消耗，也不愿把自己困在别人的节奏里。", keywords: ["松弛","随性","佛系"] },
+  CAPABLE: { name: "强大能搞定型", description: "真正遇到事情时，你会自动进入解决问题模式，经常是把事情往前推的人。", keywords: ["行动力","主见","能扛事"] },
+  DISTANT: { name: "神秘距离型", description: "你不会一开始就交代全部情绪和故事，真正的你通常只被少数人看到。", keywords: ["克制","慢热","距离感"] }
+};
+
+const INNER = {
+  SENSITIVE: { name: "高敏感观察者", description: "一句话的语气、态度的变化和关系里细微的不对劲，你经常都能察觉。", quote: "我看见了，只是不一定拆穿。", keywords: ["敏锐","观察力","细节"] },
+  AMBITIOUS: { name: "隐藏野心家", description: "你很想把自己的人生过好，也会偷偷设下目标，只是不喜欢把野心挂在嘴边。", quote: "我可以不说，但我想赢。", keywords: ["目标感","胜负欲","成长"] },
+  FREE: { name: "自由主义者", description: "你可以配合与让步，但如果长期被安排、被定义，你会越来越想逃。", quote: "我可以爱很多东西，但不能失去自己。", keywords: ["自由","选择权","自主"] },
+  DEEP: { name: "深情收藏家", description: "真正进入你心里的人和事会被记很久；你不对所有人投入，可一旦投入就很深。", quote: "嘴上翻篇了，心里可能还保存着原文件。", keywords: ["重感情","长情","念旧"] },
+  STRATEGIST: { name: "隐藏操盘手", description: "你会观察局面和下一步，很少只看表面；你未必想控制别人，但喜欢心里有数。", quote: "我不一定站 C 位，但我想知道局是怎么走的。", keywords: ["判断力","全局感","策略"] },
+  BOUNDARY: { name: "边界守护者", description: "你清楚哪些东西可以退、哪些不能退，碰到原则问题会变得非常坚定。", quote: "我不是没脾气，我只是不随便用。", keywords: ["原则","边界","坚定"] }
+};
+
+const COMBINATION_NAMES = {
+  WARM: ["外甜内醒","温柔野心家","温柔自由派","软心长情派","温柔操盘手","软萌有边界"],
+  CALM: ["冷静雷达","沉默事业批","理性自由派","外冷内软","冷面军师","冷静原则派"],
+  SOCIAL: ["外疯内细","气氛野心家","快乐自由派","热闹深情派","社交控场王","笑着划红线"],
+  RELAXED: ["佛系雷达","外佛内卷","自由散人","松弛长情派","佛系控场王","随和有底线"],
+  CAPABLE: ["清醒行动派","高能野心家","人生掌舵型","嘴硬心软型大佬","强势操盘手","原则执行官"],
+  DISTANT: ["沉默观察者","低调 Boss 型","冷感自由派","冷脸深情派","隐身操盘手","高冷边界感"]
+};
+const INNER_ORDER = ["SENSITIVE","AMBITIOUS","FREE","DEEP","STRATEGIST","BOUNDARY"];
+
+const TAGLINES = {
+  WARM_SENSITIVE:"你看起来很软，但其实什么变化都逃不过你的眼睛。", WARM_AMBITIOUS:"你的温柔是真的，你想变得更好的野心也是真的。", WARM_FREE:"你很好相处，但你的人生最终还是想自己做主。", WARM_DEEP:"你对很多人温柔，但真正放进心里的人并不多。", WARM_STRATEGIST:"你看起来没攻击性，其实心里一直都有自己的判断。", WARM_BOUNDARY:"你可以很好说话，但不代表什么都可以。",
+  CALM_SENSITIVE:"你看起来稳定，实际上捕捉到的细节比别人多得多。", CALM_AMBITIOUS:"你很少喊口号，但一直在默默往前走。", CALM_FREE:"你讲逻辑，也讲自由；愿意合作，但不愿失去自己。", CALM_DEEP:"你表现得很理性，可真正重要的人一直被你放在心里。", CALM_STRATEGIST:"你不急着表达，因为更喜欢先把全局看明白。", CALM_BOUNDARY:"你不轻易翻脸，但一旦决定，通常不会反复。",
+  SOCIAL_SENSITIVE:"你看起来很会玩，其实比谁都容易捕捉气氛里的变化。", SOCIAL_AMBITIOUS:"你可以负责热闹，也可以偷偷把目标完成。", SOCIAL_FREE:"你喜欢人群，但从不想被任何一个圈子定义。", SOCIAL_DEEP:"你负责把场子变热，也会把真正喜欢的人放得很深。", SOCIAL_STRATEGIST:"你看起来在聊天，其实早就把场上的关系看明白了。", SOCIAL_BOUNDARY:"你可以笑着聊天，也可以笑着告诉别人到此为止。",
+  RELAXED_SENSITIVE:"你看起来很佛，其实很多细节你都注意到了。", RELAXED_AMBITIOUS:"你的松弛是真的，你的野心也是真的。", RELAXED_FREE:"你真正想要的不是赢过别人，而是按自己的方式生活。", RELAXED_DEEP:"你很少强留什么，但真正喜欢的人和事会留在心里很久。", RELAXED_STRATEGIST:"你看起来随缘，其实真正重要的事情从没失控过。", RELAXED_BOUNDARY:"你不爱争，但不代表你没有底线。",
+  CAPABLE_SENSITIVE:"你总在解决事情，但其实也一直感受着所有细节。", CAPABLE_AMBITIOUS:"你不只是能做事，你是真的想把事情做成。", CAPABLE_FREE:"你喜欢掌控自己的方向，而不是活成别人安排的版本。", CAPABLE_DEEP:"你看起来很能扛事，但真正重要的人一直是你的软肋。", CAPABLE_STRATEGIST:"你不只会执行，更擅长看清下一步该怎么走。", CAPABLE_BOUNDARY:"你可以承担很多，但不会无限承担。",
+  DISTANT_SENSITIVE:"你不说，不代表你没看见。", DISTANT_AMBITIOUS:"你很少展示目标，所以别人往往低估你想走多远。", DISTANT_FREE:"你不是难接近，只是非常珍惜自己的空间。", DISTANT_DEEP:"你看起来冷，但真正走进你心里的人会发现完全不是这么回事。", DISTANT_STRATEGIST:"你不抢镜，但通常比别人更早看懂局面。", DISTANT_BOUNDARY:"你的距离感不是冷漠，而是一种明确的自我保护。"
+};
+
+const CONTRAST_OVERRIDES = { WARM_AMBITIOUS:91, WARM_BOUNDARY:88, CALM_DEEP:89, SOCIAL_SENSITIVE:92, SOCIAL_DEEP:90, RELAXED_AMBITIOUS:94, RELAXED_STRATEGIST:90, CAPABLE_DEEP:91, DISTANT_DEEP:88 };
+const OUTER_TIE = [2,0,4,10,5,3];
+const INNER_TIE = [11,9,6,4,8,7];
+const OUTER_FALLBACK = ["CAPABLE","CALM","WARM","DISTANT","SOCIAL","RELAXED"];
+const INNER_FALLBACK = ["SENSITIVE","STRATEGIST","BOUNDARY","DEEP","AMBITIOUS","FREE"];
+const STORAGE_ANSWERS = "personalityQuizAnswers";
+const STORAGE_RESULT = "personalityQuizResult";
+
+let answers = readJSON(STORAGE_ANSWERS, []);
+let currentQuestion = Math.min(answers.length, QUESTIONS.length - 1);
+let currentResult = null;
+let autoAdvanceTimer;
+
+const $ = (selector) => document.querySelector(selector);
+const views = [...document.querySelectorAll(".view")];
+
+function readJSON(key, fallback) {
+  try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; }
+}
+
+function showView(id) {
+  views.forEach((view) => view.classList.toggle("is-active", view.id === id));
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function updateResumeButton() {
+  const canResume = answers.length > 0 && answers.length < QUESTIONS.length;
+  $("#resume-button").classList.toggle("is-hidden", !canResume);
+}
+
+function beginQuiz(fresh = false) {
+  if (fresh) {
+    answers = [];
+    currentQuestion = 0;
+    localStorage.removeItem(STORAGE_ANSWERS);
+    localStorage.removeItem(STORAGE_RESULT);
+    history.replaceState({}, "", location.pathname);
+  } else {
+    currentQuestion = Math.min(answers.length, QUESTIONS.length - 1);
+  }
+  renderQuestion();
+  showView("quiz");
+}
+
+function renderQuestion() {
+  clearTimeout(autoAdvanceTimer);
+  const question = QUESTIONS[currentQuestion];
+  const selected = answers[currentQuestion]?.optionId;
+  $("#progress-current").textContent = String(currentQuestion + 1).padStart(2, "0");
+  $("#progress-bar").style.width = `${((currentQuestion + 1) / QUESTIONS.length) * 100}%`;
+  $("#question-number").textContent = `Q${currentQuestion + 1}`;
+  $("#question-title").textContent = question.text;
+  $("#previous-button").disabled = currentQuestion === 0;
+  $("#answer-list").innerHTML = question.options.map((option) => `
+    <button class="answer-option ${selected === option.id ? "is-selected" : ""}" type="button" role="radio" aria-checked="${selected === option.id}" data-option="${option.id}">
+      <span class="option-letter">${option.id}</span><span class="option-copy">${option.text}</span><span class="option-check">✓</span>
+    </button>`).join("");
+  $("#question-card").classList.remove("is-changing");
+  requestAnimationFrame(() => $("#question-card").classList.add("is-changing"));
+}
+
+function chooseAnswer(optionId) {
+  const option = QUESTIONS[currentQuestion].options.find((item) => item.id === optionId);
+  answers[currentQuestion] = { questionId: currentQuestion + 1, optionId, outer: option.outer, inner: option.inner };
+  answers = answers.slice(0, currentQuestion + 1);
+  localStorage.setItem(STORAGE_ANSWERS, JSON.stringify(answers));
+  document.querySelectorAll(".answer-option").forEach((button) => {
+    const selected = button.dataset.option === optionId;
+    button.classList.toggle("is-selected", selected);
+    button.setAttribute("aria-checked", String(selected));
+  });
+  autoAdvanceTimer = setTimeout(() => {
+    if (currentQuestion < QUESTIONS.length - 1) {
+      currentQuestion += 1;
+      renderQuestion();
+    } else {
+      revealResult();
+    }
+  }, 320);
+}
+
+function resolveWinner(kind, tieQuestionIndexes, fallback) {
+  const scores = {};
+  answers.forEach((answer) => { scores[answer[kind]] = (scores[answer[kind]] || 0) + 1; });
+  const max = Math.max(...Object.values(scores));
+  const tied = Object.keys(scores).filter((key) => scores[key] === max);
+  if (tied.length === 1) return tied[0];
+  for (const questionIndex of tieQuestionIndexes) {
+    const candidate = answers[questionIndex]?.[kind];
+    if (tied.includes(candidate)) return candidate;
+  }
+  return fallback.find((candidate) => tied.includes(candidate));
+}
+
+function hashText(text) {
+  let hash = 0;
+  for (let i = 0; i < text.length; i += 1) hash = ((hash << 5) - hash + text.charCodeAt(i)) | 0;
+  return Math.abs(hash);
+}
+
+function calculateResult() {
+  const outer = resolveWinner("outer", OUTER_TIE, OUTER_FALLBACK);
+  const inner = resolveWinner("inner", INNER_TIE, INNER_FALLBACK);
+  const key = `${outer}_${inner}`;
+  const answerString = answers.map((answer) => answer.optionId).join("");
+  const contrastScore = CONTRAST_OVERRIDES[key] || 72 + (hashText(key + answerString) % 18);
+  const combinationName = COMBINATION_NAMES[outer][INNER_ORDER.indexOf(inner)];
+  return { outer, inner, combinationName, contrastScore, tagline: TAGLINES[key], keywords: [...OUTER[outer].keywords.slice(0,2), ...INNER[inner].keywords.slice(0,2)] };
+}
+
+function revealResult() {
+  currentResult = calculateResult();
+  localStorage.setItem(STORAGE_RESULT, JSON.stringify(currentResult));
+  showView("reveal");
+  const copy = $("#reveal-copy");
+  copy.textContent = "正在拆掉你的人设……";
+  setTimeout(() => { copy.textContent = "正在读取隐藏人格……"; }, 650);
+  setTimeout(() => {
+    renderResult(currentResult);
+    updateResultUrl(currentResult);
+    showView("result");
+  }, 1450);
+}
+
+function renderResult(result) {
+  const outer = OUTER[result.outer];
+  const inner = INNER[result.inner];
+  $("#result-title").textContent = result.combinationName;
+  $("#result-tagline").textContent = result.tagline;
+  $("#contrast-value").innerHTML = `${result.contrastScore}<span>%</span>`;
+  $("#outer-name").textContent = outer.name;
+  $("#outer-description").textContent = outer.description;
+  $("#inner-name").textContent = inner.name;
+  $("#inner-description").textContent = inner.description;
+  $("#inner-quote").textContent = `“${inner.quote}”`;
+  $("#keyword-list").innerHTML = result.keywords.map((keyword) => `<span># ${keyword}</span>`).join("");
+  document.title = `我的人格反差是「${result.combinationName}」`;
+}
+
+function updateResultUrl(result) {
+  const url = new URL(location.href);
+  url.search = "";
+  url.searchParams.set("outer", result.outer);
+  url.searchParams.set("inner", result.inner);
+  url.searchParams.set("contrast", result.contrastScore);
+  history.replaceState({}, "", url);
+}
+
+function getSharedResult() {
+  const params = new URLSearchParams(location.search);
+  const outer = params.get("outer");
+  const inner = params.get("inner");
+  const contrast = Number(params.get("contrast"));
+  if (!OUTER[outer] || !INNER[inner]) return null;
+  const key = `${outer}_${inner}`;
+  return { outer, inner, combinationName: COMBINATION_NAMES[outer][INNER_ORDER.indexOf(inner)], contrastScore: contrast >= 72 && contrast <= 94 ? contrast : 82, tagline: TAGLINES[key], keywords: [...OUTER[outer].keywords.slice(0,2), ...INNER[inner].keywords.slice(0,2)] };
+}
+
+function roundRect(ctx, x, y, width, height, radius, fill) {
+  ctx.beginPath();
+  ctx.roundRect(x, y, width, height, radius);
+  ctx.fillStyle = fill;
+  ctx.fill();
+}
+
+function wrapText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 4) {
+  const chars = [...text];
+  const lines = [];
+  let line = "";
+  chars.forEach((char) => {
+    const test = line + char;
+    if (ctx.measureText(test).width > maxWidth && line) { lines.push(line); line = char; } else line = test;
+  });
+  if (line) lines.push(line);
+  lines.slice(0, maxLines).forEach((value, index) => ctx.fillText(value, x, y + index * lineHeight));
+}
+
+async function generateShareCard() {
+  if (!currentResult) return;
+  const canvas = $("#share-canvas");
+  const ctx = canvas.getContext("2d");
+  const result = currentResult;
+  const outer = OUTER[result.outer];
+  const inner = INNER[result.inner];
+  ctx.clearRect(0, 0, 1080, 1440);
+  ctx.fillStyle = "#F7F3EE";
+  ctx.fillRect(0, 0, 1080, 1440);
+  ctx.fillStyle = "#FF7585"; ctx.fillRect(0, 0, 540, 12);
+  ctx.fillStyle = "#6E67F4"; ctx.fillRect(540, 0, 540, 12);
+  ctx.fillStyle = "#776B65"; ctx.font = "700 26px sans-serif"; ctx.letterSpacing = "5px"; ctx.fillText("PERSONALITY MIRROR · 人格反差测试", 78, 92);
+  ctx.fillStyle = "#211D1B"; ctx.font = "700 36px sans-serif"; ctx.fillText("别人眼里的我", 78, 183);
+  ctx.fillStyle = "#D95666"; ctx.font = "700 54px sans-serif"; ctx.fillText(outer.name, 78, 249);
+  ctx.fillStyle = "#211D1B"; ctx.font = "700 36px sans-serif"; ctx.fillText("真正的我", 616, 183);
+  ctx.fillStyle = "#5C55DF"; ctx.font = "700 54px sans-serif"; ctx.fillText(inner.name, 616, 249);
+  roundRect(ctx, 58, 315, 964, 612, 54, "#FFFDFC");
+  ctx.fillStyle = "#82691E"; ctx.font = "700 24px sans-serif"; roundRect(ctx, 110, 370, 222, 56, 28, "#FFF3C9"); ctx.fillText("我的反差人格", 137, 407);
+  ctx.fillStyle = "#211D1B"; ctx.font = "700 112px sans-serif"; ctx.fillText(result.combinationName, 106, 572);
+  ctx.fillStyle = "#5F5550"; ctx.font = "600 34px sans-serif"; wrapText(ctx, result.tagline, 110, 650, 700, 54, 3);
+  ctx.fillStyle = "#25201E"; ctx.font = "700 128px sans-serif"; ctx.fillText(String(result.contrastScore), 110, 872);
+  ctx.fillStyle = "#25201E"; ctx.font = "700 52px sans-serif"; ctx.fillText("%", 280, 867);
+  ctx.fillStyle = "#857973"; ctx.font = "400 23px sans-serif"; ctx.fillText("娱乐向人格反差指数", 365, 850);
+  result.keywords.forEach((word, index) => {
+    const x = 70 + (index % 2) * 485;
+    const y = 980 + Math.floor(index / 2) * 88;
+    roundRect(ctx, x, y, 445, 62, 31, index < 2 ? "#FFF1F2" : "#F2F1FF");
+    ctx.fillStyle = index < 2 ? "#C84B5A" : "#5149D2"; ctx.font = "600 27px sans-serif"; ctx.fillText(`# ${word}`, x + 28, y + 41);
+  });
+  ctx.fillStyle = "#211D1B"; ctx.font = "700 30px sans-serif"; ctx.fillText("你的外在人设是真的，", 72, 1282); ctx.fillText("隐藏的那一面也是真的。", 72, 1328);
+  ctx.fillStyle = "#A0948D"; ctx.font = "400 21px sans-serif"; ctx.fillText("长按保存 · 分享你的反差人格", 704, 1315);
+  canvas.toBlob(async (blob) => {
+    if (!blob) return;
+    const file = new File([blob], `${result.combinationName}-人格反差测试.png`, { type: "image/png" });
+    if (navigator.share && navigator.canShare?.({ files: [file] })) {
+      try { await navigator.share({ title: `我的人格反差是「${result.combinationName}」`, text: result.tagline, files: [file] }); return; } catch (error) { if (error.name === "AbortError") return; }
+    }
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = file.name;
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+    toast("分享卡片已生成");
+  }, "image/png");
+}
+
+function shareResultLink() {
+  if (!currentResult) return;
+  const data = { title: `我的人格反差是「${currentResult.combinationName}」`, text: currentResult.tagline, url: location.href };
+  if (navigator.share) navigator.share(data).catch(() => {});
+  else navigator.clipboard?.writeText(location.href).then(() => toast("结果链接已复制"));
+}
+
+let toastTimer;
+function toast(message) {
+  clearTimeout(toastTimer);
+  $("#toast").textContent = message;
+  $("#toast").classList.add("is-visible");
+  toastTimer = setTimeout(() => $("#toast").classList.remove("is-visible"), 1800);
+}
+
+$("#start-button").addEventListener("click", () => beginQuiz(true));
+$("#resume-button").addEventListener("click", () => beginQuiz(false));
+$("#answer-list").addEventListener("click", (event) => {
+  const button = event.target.closest(".answer-option");
+  if (button) chooseAnswer(button.dataset.option);
+});
+$("#previous-button").addEventListener("click", () => { if (currentQuestion > 0) { currentQuestion -= 1; renderQuestion(); } });
+$("#quiz-close").addEventListener("click", () => { updateResumeButton(); showView("landing"); });
+$("#result-home").addEventListener("click", () => { updateResumeButton(); showView("landing"); });
+$("#result-more").addEventListener("click", shareResultLink);
+$("#share-button").addEventListener("click", generateShareCard);
+$("#restart-button").addEventListener("click", () => beginQuiz(true));
+
+const sharedResult = getSharedResult();
+if (sharedResult) {
+  currentResult = sharedResult;
+  renderResult(sharedResult);
+  showView("result");
+} else {
+  updateResumeButton();
+}
+
+</script>
+  </body>
+</html>
