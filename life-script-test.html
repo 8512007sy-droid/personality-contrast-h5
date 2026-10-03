@@ -1,0 +1,931 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#F6F0E6">
+  <title>如果人生是一部剧，你拿的是什么剧本？</title>
+  <style>
+    :root {
+      --bg: #F6F0E6;
+      --surface: #FFFBF5;
+      --ink: #292521;
+      --muted: #71665D;
+      --primary: #A83D45;
+      --primary-hover: #8C2F37;
+      --selected-bg: #F8E9E4;
+      --decorative-border: #D9CCBC;
+      --control-border: #8A7A6B;
+      --focus: #3E617C;
+      --gold: #B7955B;
+      --serif: "Songti SC", "STSong", "SimSun", serif;
+      --sans: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { background: var(--bg); color: var(--ink); }
+    body {
+      min-height: 100svh;
+      margin: 0;
+      overflow-x: hidden;
+      font-family: var(--sans);
+      background:
+        radial-gradient(circle at 18% 12%, rgba(168, 61, 69, .045) 0 1px, transparent 1.5px) 0 0 / 19px 19px,
+        linear-gradient(90deg, rgba(117, 94, 66, .024) 1px, transparent 1px) 0 0 / 7px 7px,
+        var(--bg);
+    }
+    button { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button:focus-visible, a:focus-visible, input:focus-visible + label, summary:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+    [hidden] { display: none !important; }
+
+    .app-shell {
+      width: min(100%, 680px);
+      min-height: 100svh;
+      margin: 0 auto;
+      padding: 18px 20px calc(28px + env(safe-area-inset-bottom));
+    }
+    .paper {
+      position: relative;
+      width: 100%;
+      min-height: calc(100svh - 46px);
+      overflow: hidden;
+      border: 1px solid var(--decorative-border);
+      background: rgba(255, 251, 245, .93);
+      box-shadow: 0 12px 40px rgba(62, 45, 34, .08);
+    }
+    .paper::before, .paper::after {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 12px;
+      content: "";
+      opacity: .5;
+      background: repeating-linear-gradient(to bottom, var(--ink) 0 8px, transparent 8px 16px);
+      pointer-events: none;
+    }
+    .paper::before { left: 0; }
+    .paper::after { right: 0; }
+    .screen { min-width: 0; padding: 30px 30px 34px; animation: scene-in 200ms ease-out; }
+    .screen:focus { outline: none; }
+
+    .eyebrow {
+      margin: 0;
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .masthead, .quiz-topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--decorative-border);
+    }
+    .ticket-no {
+      flex: none;
+      color: var(--muted);
+      font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+      font-size: 12px;
+      letter-spacing: .08em;
+    }
+    .home-content { display: grid; width: 100%; min-width: 0; align-content: center; min-height: calc(100svh - 190px); overflow: hidden; }
+    .home-content > * { min-width: 0; max-width: 100%; }
+    .clapper {
+      width: 86px;
+      height: 58px;
+      margin: 34px 0 24px;
+      transform: rotate(-4deg);
+      border: 2px solid var(--ink);
+      background: var(--surface);
+      box-shadow: 5px 5px 0 var(--primary);
+    }
+    .clapper::before {
+      display: block;
+      height: 15px;
+      content: "";
+      border-bottom: 2px solid var(--ink);
+      background: repeating-linear-gradient(135deg, var(--ink) 0 9px, var(--surface) 9px 18px);
+    }
+    .clapper::after {
+      display: block;
+      width: 46px;
+      height: 12px;
+      margin: 13px auto 0;
+      content: "SCENE 01";
+      color: var(--ink);
+      font: 700 7px/12px ui-monospace, monospace;
+      text-align: center;
+      letter-spacing: .08em;
+      border-top: 1px solid var(--ink);
+      border-bottom: 1px solid var(--ink);
+    }
+    h1, h2, h3 { font-family: var(--serif); }
+    h1 {
+      max-width: 510px;
+      margin: 0;
+      overflow-wrap: anywhere;
+      word-break: break-all;
+      font-size: clamp(30px, 8.5vw, 52px);
+      line-height: 1.16;
+      text-wrap: balance;
+    }
+    .lede {
+      max-width: 490px;
+      margin: 24px 0 30px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.75;
+      text-wrap: pretty;
+    }
+    .actions { display: grid; width: 100%; min-width: 0; gap: 12px; }
+    .button {
+      display: inline-flex;
+      min-height: 52px;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 13px 20px;
+      cursor: pointer;
+      border: 2px solid var(--primary);
+      border-radius: 12px;
+      background: var(--primary);
+      color: var(--surface);
+      font-weight: 800;
+      line-height: 1.35;
+      transition: transform 150ms ease, background 150ms ease, border-color 150ms ease;
+    }
+    .button:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
+    .button:active { transform: translateY(1px); }
+    .button:disabled { cursor: not-allowed; opacity: .45; transform: none; }
+    .button.secondary { background: transparent; color: var(--ink); border-color: var(--control-border); }
+    .button.secondary:hover { background: rgba(113, 102, 93, .07); border-color: var(--ink); }
+    .button.text { min-height: 44px; padding: 8px 4px; background: transparent; color: var(--muted); border-color: transparent; }
+    .button.text:hover { color: var(--ink); background: transparent; border-color: transparent; }
+    .meta-line { margin: 14px 0 0; color: var(--muted); font-size: 13px; text-align: center; }
+    .home-foot {
+      display: grid;
+      gap: 4px;
+      margin-top: 42px;
+      padding-top: 18px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+      border-top: 1px solid var(--decorative-border);
+    }
+
+    .quiz-topline { align-items: flex-end; }
+    .question-count { margin: 0; color: var(--ink); font: 800 14px/1 ui-monospace, monospace; }
+    .progress-track {
+      width: 100%;
+      height: 5px;
+      margin: 18px 0 28px;
+      overflow: hidden;
+      border-radius: 99px;
+      background: #E6DCCE;
+    }
+    .progress-value { width: 0; height: 100%; background: var(--primary); transition: width 180ms ease; }
+    .scene-label { margin: 0 0 9px; color: var(--primary); font: 800 12px/1.2 ui-monospace, monospace; letter-spacing: .12em; }
+    .question-title { margin: 0 0 24px; font-size: clamp(23px, 5.8vw, 30px); line-height: 1.42; text-wrap: pretty; }
+    .options { display: grid; gap: 12px; margin: 0; padding: 0; border: 0; }
+    .option { position: relative; }
+    .option input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+    .option label {
+      display: grid;
+      grid-template-columns: 34px 1fr 20px;
+      min-height: 58px;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 15px;
+      cursor: pointer;
+      border: 1.5px solid var(--control-border);
+      border-radius: 12px;
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 16px;
+      line-height: 1.55;
+      transition: border-color 150ms ease, background 150ms ease, transform 150ms ease;
+    }
+    .option label:hover { border-color: var(--primary); transform: translateY(-1px); }
+    .option-letter {
+      display: grid;
+      width: 32px;
+      height: 32px;
+      place-items: center;
+      border: 1px solid var(--decorative-border);
+      border-radius: 50%;
+      color: var(--muted);
+      font: 800 13px/1 ui-monospace, monospace;
+    }
+    .option-check { position: relative; width: 18px; height: 18px; border: 1.5px solid var(--control-border); border-radius: 50%; }
+    .option input:checked + label { border: 2px solid var(--primary); background: var(--selected-bg); }
+    .option input:checked + label .option-letter { border-color: var(--primary); color: var(--primary); }
+    .option input:checked + label .option-check { border-color: var(--primary); background: var(--primary); }
+    .option input:checked + label .option-check::after {
+      position: absolute;
+      left: 5px;
+      top: 2px;
+      width: 4px;
+      height: 8px;
+      content: "";
+      transform: rotate(45deg);
+      border: solid var(--surface);
+      border-width: 0 2px 2px 0;
+    }
+    .quiz-actions { display: grid; grid-template-columns: 1fr 1.35fr; gap: 12px; margin-top: 26px; }
+    .quiz-actions.single { grid-template-columns: 1fr; }
+
+    .result-head { position: relative; padding: 24px 0 28px; border-bottom: 1px solid var(--decorative-border); }
+    .result-head::after {
+      position: absolute;
+      right: 2px;
+      bottom: 24px;
+      width: 78px;
+      height: 78px;
+      content: "CAST\A SELECTED";
+      display: grid;
+      place-items: center;
+      transform: rotate(-9deg);
+      white-space: pre;
+      border: 2px solid var(--accent, var(--primary));
+      border-radius: 50%;
+      color: var(--accent, var(--primary));
+      font: 900 9px/1.25 ui-monospace, monospace;
+      text-align: center;
+      letter-spacing: .1em;
+      opacity: .82;
+    }
+    .result-title { max-width: calc(100% - 96px); margin: 10px 0 14px; color: var(--accent, var(--primary)); font-size: clamp(38px, 9vw, 56px); line-height: 1.12; }
+    .quote { max-width: 500px; margin: 0; font-family: var(--serif); font-size: 19px; font-weight: 700; line-height: 1.65; }
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+    .tag { padding: 6px 10px; border: 1px solid var(--accent, var(--primary)); color: var(--accent, var(--primary)); font-size: 12px; font-weight: 800; }
+    .result-copy { margin: 28px 0; font-size: 16px; line-height: 1.75; text-wrap: pretty; }
+    .story-block { padding: 22px 0; border-top: 1px solid var(--decorative-border); }
+    .story-block h3 { margin: 0 0 10px; font-size: 20px; }
+    .story-block p { margin: 0; color: #4E4741; font-size: 15px; line-height: 1.75; }
+    .story-block.next { margin: 6px 0 24px; padding: 22px; border: 1px solid color-mix(in srgb, var(--accent, var(--primary)) 42%, var(--decorative-border)); background: color-mix(in srgb, var(--accent, var(--primary)) 7%, var(--surface)); }
+    .secondary-result { margin: 0 0 28px; padding: 20px; border-left: 4px solid var(--accent, var(--primary)); background: #F4ECE2; }
+    .secondary-result strong { display: block; margin-bottom: 8px; font-family: var(--serif); font-size: 18px; }
+    .secondary-result p { margin: 0; color: #4E4741; font-size: 14px; line-height: 1.65; }
+    .tie-note { margin: -12px 0 24px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+    details { margin: 26px 0; border-top: 1px solid var(--decorative-border); border-bottom: 1px solid var(--decorative-border); }
+    summary { min-height: 48px; padding: 14px 0; cursor: pointer; color: var(--ink); font-weight: 800; }
+    details p { margin: 0; padding: 0 0 18px; color: var(--muted); font-size: 14px; line-height: 1.7; }
+    .disclaimer { margin: 24px 0 0; color: var(--muted); font-size: 12px; line-height: 1.65; text-align: center; }
+
+    dialog {
+      width: min(calc(100% - 28px), 520px);
+      max-height: calc(100svh - 28px);
+      padding: 0;
+      overflow: auto;
+      border: 1px solid var(--decorative-border);
+      border-radius: 16px;
+      background: var(--surface);
+      color: var(--ink);
+      box-shadow: 0 22px 70px rgba(41, 37, 33, .28);
+    }
+    dialog::backdrop { background: rgba(41, 37, 33, .68); backdrop-filter: blur(3px); }
+    .dialog-inner { padding: 20px; }
+    .dialog-head { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 16px; }
+    .dialog-head h2 { margin: 0; font-size: 22px; }
+    .icon-button { display: grid; width: 44px; height: 44px; place-items: center; cursor: pointer; border: 1px solid var(--control-border); border-radius: 50%; background: transparent; color: var(--ink); }
+    .icon-button svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; }
+    .poster-preview { display: block; width: 100%; height: auto; border: 1px solid var(--decorative-border); background: var(--bg); }
+    .poster-help { margin: 12px 0 16px; color: var(--muted); font-size: 13px; line-height: 1.6; text-align: center; }
+    .poster-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .error-box { padding: 18px; border: 1px solid var(--primary); color: var(--primary); line-height: 1.6; text-align: center; }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(18px + env(safe-area-inset-bottom));
+      z-index: 20;
+      max-width: calc(100% - 40px);
+      transform: translateX(-50%);
+      padding: 11px 16px;
+      border-radius: 8px;
+      background: var(--ink);
+      color: var(--surface);
+      font-size: 13px;
+      box-shadow: 0 8px 28px rgba(41, 37, 33, .22);
+    }
+
+    @keyframes scene-in { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: none; } }
+    @media (max-width: 520px) {
+      .app-shell { padding: 0; }
+      .paper { min-height: 100svh; border-top: 0; border-bottom: 0; }
+      .screen { padding: 24px 26px 30px; }
+      .home-content { min-height: calc(100svh - 130px); }
+      .clapper { margin-top: 28px; }
+      .quiz-actions { position: sticky; bottom: 0; margin: 22px -10px -16px; padding: 12px 10px calc(12px + env(safe-area-inset-bottom)); background: linear-gradient(to bottom, rgba(255,251,245,.25), var(--surface) 22%); }
+    }
+    @media (max-width: 360px) {
+      .screen { padding-left: 22px; padding-right: 22px; }
+      .masthead .ticket-no { display: none; }
+      .option label { grid-template-columns: 30px 1fr 18px; gap: 9px; padding: 12px; font-size: 15px; }
+      .option-letter { width: 28px; height: 28px; }
+      .result-head::after { width: 64px; height: 64px; font-size: 8px; }
+      .result-title { max-width: calc(100% - 72px); }
+      .quiz-actions { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app-shell">
+    <article class="paper" id="app" aria-live="polite"></article>
+  </main>
+
+  <dialog id="posterDialog" aria-labelledby="posterTitle">
+    <div class="dialog-inner">
+      <div class="dialog-head">
+        <h2 id="posterTitle">我的剧本海报</h2>
+        <button class="icon-button" id="closePoster" type="button" aria-label="关闭海报预览">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"></path></svg>
+        </button>
+      </div>
+      <div id="posterStage"></div>
+      <p class="poster-help" id="posterHelp">可保存图片；移动端也可以长按海报保存。</p>
+      <div class="poster-actions">
+        <button class="button" id="savePoster" type="button">保存图片</button>
+        <button class="button secondary" id="sharePoster" type="button" hidden>分享图片</button>
+      </div>
+    </div>
+  </dialog>
+  <div class="toast" id="toast" role="status" hidden></div>
+
+  <script>
+  (() => {
+    "use strict";
+
+    const STORAGE_KEY = "life-script:v1";
+    const CONTENT_VERSION = "life-script-v1";
+    const TYPE_IDS = ["A", "B", "C", "D", "E", "F", "G", "H"];
+    const OPTION_IDS = ["a", "b", "c", "d"];
+
+    const questions = [
+      { id: "q01", text: "朋友突然说：“周末一起试个新活动？”但你完全没接触过。你更可能：", options: [
+        { id: "a", text: "先看自己有没有兴趣，不感兴趣就留着周末做自己的事", typeId: "G" },
+        { id: "b", text: "活动可以商量，我更在意和喜欢的人好好相处", typeId: "C" },
+        { id: "c", text: "先报名试一次，去了才知道会发生什么", typeId: "A" },
+        { id: "d", text: "先看看活动怎么进行、要准备什么，再决定", typeId: "E" }
+      ]},
+      { id: "q02", text: "你花了不少时间做的东西，第一次拿出去没什么回应。你会：", options: [
+        { id: "a", text: "先改一个具体问题，再做下一版", typeId: "B" },
+        { id: "b", text: "只要我还对它着迷，就继续往自己喜欢的方向做", typeId: "H" },
+        { id: "c", text: "找个能理解的人聊聊，先把失落消化掉", typeId: "F" },
+        { id: "d", text: "看看发布时机、展示方式和合作对象，换一种打法", typeId: "D" }
+      ]},
+      { id: "q03", text: "四个人一起做事，进度已经落后。你最自然会做的事是：", options: [
+        { id: "a", text: "看看谁已经撑不住，先让大家能继续配合", typeId: "F" },
+        { id: "b", text: "先把最急的一件事拉起来，带大家马上动起来", typeId: "A" },
+        { id: "c", text: "调整分工，把能调动的人和资源接上", typeId: "D" },
+        { id: "d", text: "想个不那么常规的做法，看看能不能换条路", typeId: "H" }
+      ]},
+      { id: "q04", text: "有人给了你一个看起来很不错的机会，但和你的原计划不同。你会先：", options: [
+        { id: "a", text: "问清楚要求和代价，比较它与原计划的利弊", typeId: "E" },
+        { id: "b", text: "想清楚这是不是我想要的生活，而不是别人眼里的好", typeId: "G" },
+        { id: "c", text: "看它能让我积累什么能力，值不值得长期投入", typeId: "B" },
+        { id: "d", text: "确认里面有没有我不愿违背的原则", typeId: "C" }
+      ]},
+      { id: "q05", text: "朋友想请你“帮忙圆个说法”，你觉得这件事有点不妥。你更可能：", options: [
+        { id: "a", text: "讲清楚我不能替这件事背书，但可以一起想别的办法", typeId: "C" },
+        { id: "b", text: "先弄清涉及谁、会影响什么，再安排怎么把局面收住", typeId: "D" },
+        { id: "c", text: "说明这超出了我的参与范围，不把自己卷进去", typeId: "G" },
+        { id: "d", text: "先承认哪里做错了，再一件件补救，不能一直拖", typeId: "B" }
+      ]},
+      { id: "q06", text: "完全属于你的一个晚上，哪种状态最让你满足？", options: [
+        { id: "a", text: "钻进一个别人未必懂的小爱好，时间一下就过去了", typeId: "H" },
+        { id: "b", text: "把一直没想明白的问题理顺，终于知道怎么回事", typeId: "E" },
+        { id: "c", text: "去尝试一个新地方或新体验，让今晚有点故事", typeId: "A" },
+        { id: "d", text: "和让我安心的人聊会儿天，彼此都轻松一点", typeId: "F" }
+      ]},
+      { id: "q07", text: "准备了很久的一件事，临场出了意外。你第一步更可能：", options: [
+        { id: "a", text: "先站出来接住现场，边行动边调整", typeId: "A" },
+        { id: "b", text: "从还能做的一步开始，先让事情重新往前走", typeId: "B" },
+        { id: "c", text: "找出最关键的故障点，别让大家一起乱试", typeId: "E" },
+        { id: "d", text: "先让受影响的人缓一下，再一起处理", typeId: "F" }
+      ]},
+      { id: "q08", text: "一个新群里一直很安静，你会怎么参与？", options: [
+        { id: "a", text: "看看谁擅长什么，遇到合适的话题再把大家连接起来", typeId: "D" },
+        { id: "b", text: "认真回复自己能回应的话，不刻意刷存在感", typeId: "C" },
+        { id: "c", text: "分享一个最近让我入迷的冷门发现", typeId: "H" },
+        { id: "d", text: "需要我的时候再出现，安静待着也挺舒服", typeId: "G" }
+      ]},
+      { id: "q09", text: "学一个新东西，最开始你明显比别人慢。你通常：", options: [
+        { id: "a", text: "给自己定一个小进度，反复练到真的会", typeId: "B" },
+        { id: "b", text: "调整成适合自己的节奏，不追着别人的速度跑", typeId: "G" },
+        { id: "c", text: "找个愿意互相鼓励的人一起学", typeId: "F" },
+        { id: "d", text: "主动争取一次练习机会，边做边补短板", typeId: "A" }
+      ]},
+      { id: "q10", text: "两位朋友意见冲突，都希望你站在自己这边。你更可能：", options: [
+        { id: "a", text: "把我认可和不认可的地方都说清，不为维持关系乱表态", typeId: "C" },
+        { id: "b", text: "提一个两个人都没想到的新角度，让话题先有出口", typeId: "H" },
+        { id: "c", text: "找到双方都能接受的安排，把僵住的局面往前推", typeId: "D" },
+        { id: "d", text: "把争议拆开，分清事实、需求和各自的猜测", typeId: "E" }
+      ]},
+      { id: "q11", text: "有人说：“我最近好像什么都做不好。”你更容易回应：", options: [
+        { id: "a", text: "“具体是哪件事？我们一起看看卡在哪里。”", typeId: "E" },
+        { id: "b", text: "“今天是不是很难熬？你想说的话我听着。”", typeId: "F" },
+        { id: "c", text: "“你不用表现得很好才值得被尊重，这一点不会变。”", typeId: "C" },
+        { id: "d", text: "“要不要一起做点你以前喜欢的小事？先找回一点感觉。”", typeId: "H" }
+      ]},
+      { id: "q12", text: "大家都在追一个热门目标，但你没那么心动。你更可能：", options: [
+        { id: "a", text: "不跟也没关系，把时间还给我真正想做的事", typeId: "G" },
+        { id: "b", text: "试着参与一次，亲身体验之后再决定要不要继续", typeId: "A" },
+        { id: "c", text: "先按自己的计划打基础，不因为一阵热度打乱积累", typeId: "B" },
+        { id: "d", text: "留意它会改变什么，等出现适合我的切入点再参与", typeId: "D" }
+      ]},
+      { id: "q13", text: "做成了一件不容易的事，最让你满足的是：", options: [
+        { id: "a", text: "人、资源和时机终于配合起来，关键一步走对了", typeId: "D" },
+        { id: "b", text: "那个复杂问题终于有了清晰、可行的解法", typeId: "E" },
+        { id: "c", text: "我真的把一个很私人、很特别的想法变成了现实", typeId: "H" },
+        { id: "d", text: "回头看，原来我已经比最开始进步了这么多", typeId: "B" }
+      ]},
+      { id: "q14", text: "一位相识很久的朋友突然约你见面。你最期待：", options: [
+        { id: "a", text: "彼此能放下疲惫，有人好好听自己说话", typeId: "F" },
+        { id: "b", text: "不用刻意表现，还能真诚地聊一些重要的事", typeId: "C" },
+        { id: "c", text: "随意散步、各说各的近况，不必塞满安排", typeId: "G" },
+        { id: "d", text: "一起做点没做过的事，留下一个新故事", typeId: "A" }
+      ]},
+      { id: "q15", text: "如果给这段时间的自己留一句提醒，你会选：", options: [
+        { id: "a", text: "那个让我一直着迷的小念头，值得认真做一次", typeId: "H" },
+        { id: "b", text: "不必一下追上所有人，继续走就有变化", typeId: "B" },
+        { id: "c", text: "别总等一个完美开场，先给自己争取一次机会", typeId: "A" },
+        { id: "d", text: "我可以按自己的节奏来，不必每次都交出同样的答案", typeId: "G" }
+      ]},
+      { id: "q16", text: "回头看一段让你很有成就感的经历，你更希望自己留下：", options: [
+        { id: "a", text: "一个言行一致、没有轻易放弃原则的自己", typeId: "C" },
+        { id: "b", text: "一个能把不同力量组织起来，让事情发生的自己", typeId: "D" },
+        { id: "c", text: "一个真正理解了难题、找到解决办法的自己", typeId: "E" },
+        { id: "d", text: "一段让人觉得被理解、有人相伴的关系", typeId: "F" }
+      ]}
+    ];
+
+    const results = {
+      A: { name: "天选主角", tags: ["敢开场", "有冲劲", "创造转机"], accent: "#A83D45", quote: "不是命运偏爱你，是你常常先把门推开。", description: "你更像那个会把剧情往前推的人。新机会出现时，你愿意先接触、先开口、先争取，不一定等到所有条件都完美。别人看到的是你的冲劲，而你真正擅长的，是让“可能发生”变成“已经开始”。这里的天选，不是一路顺风，而是遇到转折时，你仍愿意走进下一幕。", highlight: "没人愿意先动的时候，你能给事情一个开场。你的行动也可能让身边的人发现：原来真的可以试试。", blindSpot: "起步很快，后续细节却可能跟不上。你有时会把“我能扛住”当成不需要帮助。", nextStep: "下次接新机会之前，写下一个目标、一个停止条件和一位可以求助的人。", posterText: "你不一定每次都赢，但常常是先让故事发生的人。你的高光，从愿意迈出一步开始。", secondaryText: "关键时刻，你也会主动站出来，为自己争取一次开场。" },
+      B: { name: "慢热逆袭主角", tags: ["后劲", "韧性", "稳步成长"], accent: "#A15C3B", quote: "前几集安静一点，后面的戏才刚刚开始。", description: "你不一定一开始就显眼，但你很在意自己有没有真正变好。一次受挫后，你更容易找出还能修正的一步，把重复变成积累。别人可能直到某个时刻才发现你的变化，你自己却知道，那不是突然开挂，是前面很多不被看见的努力终于接上了。", highlight: "当新鲜感散去、别人准备放弃时，你还有把事情往前推进一点的耐心。", blindSpot: "你可能总觉得“还不够好”，于是准备了很久，却迟迟不让别人看见成果。", nextStep: "为一个正在做的目标定一次小型展示，不等完美，只拿出当前版本。", posterText: "不是每个主角都在第一集发光。你把安静的日子过成积累，让后来的自己有底气出场。", secondaryText: "你也带着持续积累的后劲，愿意把一次尝试认真做成下一版。" },
+      C: { name: "白月光型人物", tags: ["真诚", "分寸", "留下余韵"], accent: "#9A5069", quote: "你让人记住的，是不必讨好也依然真诚。", description: "你在意的，不只是能不能把事情做成，还包括自己有没有违背认可的东西。你可能不总抢话，也不喜欢为了融入随意表态，但在关键地方会认真回应。你的“白月光”气质来自言行之间的连续性：别人知道，与你相处可以相信你的真诚与分寸。", highlight: "局面复杂时，你仍能说清楚自己的立场，也给别人保留尊重。", blindSpot: "你可能太想把话说得妥帖，把自己的不满和需要放到最后，结果别人看见了礼貌，却没看见你。", nextStep: "找一次安全的交流，直接说出一句“我希望……”或“这件事让我不舒服”。", posterText: "你不需要一直温柔、一直完美。能让人记住的，是你认真做自己时留下的真诚。", secondaryText: "你也很在意真诚与分寸，关键选择里会留住自己的原则。" },
+      D: { name: "隐藏Boss", tags: ["控场", "长线", "关键落子"], accent: "#65517A", quote: "你不一定站在镜头中央，却知道关键一幕怎么拍。", description: "你容易看到人与资源之间的关系：谁擅长什么，什么时候适合推进，哪一步会影响后面。你不一定喜欢高调宣布计划，却希望事情在需要的时候有路可走。你的强项是组织局面、促成合作，而不是控制所有人。别人看到的是结果，你知道中间哪些连接真正起了作用。", highlight: "当几个人各有能力却没有方向时，你能把他们放到合适的位置，让分散的力量接起来。", blindSpot: "你习惯预先安排，可能忘记向别人解释想法。事情没按计划走时，也容易把责任全放到自己身上。", nextStep: "做下一次安排时，先问参与者各自想承担什么，再把你的考虑说出来。", posterText: "你未必最早出场，但关键转折里经常有你的安排。你的力量，是让合适的人与时机相遇。", secondaryText: "你也会留意资源和时机，知道怎样把分散的力量连接起来。" },
+      E: { name: "军师型人物", tags: ["洞察", "拆解", "判断"], accent: "#3E617C", quote: "别急着改结局，先看看剧情卡在了哪里。", description: "你遇到问题时，很容易先分清它到底是什么。比起跟着情绪跑，你倾向于理解信息、找出关键、比较不同路径。你不必替所有人决定，但常常能给混乱的讨论一个清晰入口。你的价值不只在于“想得多”，更在于把复杂的事解释成下一步能做的事。", highlight: "大家被很多细节绕住时，你能找到真正要解决的那个问题。", blindSpot: "你可能分析到足够清楚之后还想继续分析；面对难过的人，也可能先给方案，错过了对方想被听见的时刻。", nextStep: "别人来倾诉时，先问一句：“你想让我陪你听一会儿，还是一起想办法？”", posterText: "你给故事的，不只是一个聪明答案，而是一条能走的路。混乱里，你会先找到关键的一幕。", secondaryText: "你也擅长把问题拆开，给下一步找到清晰的入口。" },
+      F: { name: "治愈系角色", tags: ["共情", "温度", "陪伴"], accent: "#4B6B56", quote: "有你在的那一幕，大家终于可以喘口气。", description: "你很在意人与人相处时的感受。有人疲惫、失落或快要撑不住时，你更容易先注意到那个人，而不是马上评判结果。你的陪伴不一定很热闹，可能只是认真听完一句话，让对方不用一直装作没事。你给故事的温度，也值得回到你自己身上。", highlight: "关系紧绷时，你能让人重新感觉被理解，帮合作找回一点安心。", blindSpot: "你可能太习惯接住别人，忘了说出自己的疲惫；也可能把别人不开心当成自己必须解决的任务。", nextStep: "下次帮忙前，先检查自己的精力，并试着说出“我可以陪你半小时”。", posterText: "你让人不必一直坚强，也让故事多了可以休息的地方。别忘了，你也值得被认真照顾。", secondaryText: "你也会关注人的感受，让相处多一点温度和安心。" },
+      G: { name: "自由NPC", tags: ["自由", "边界", "自定节奏"], accent: "#3E7371", quote: "别人的主线任务，不一定是你的通关条件。", description: "你更想保留决定自己节奏的权利。热门机会、群体安排和外界期待出现时，你会先问：这真的是我想参与的吗？你不一定排斥合作，只是希望参与是自己的选择。这里的NPC是一个轻松的梗：你不必被所有人的故事征用，也有权把自己的日子过得很完整。", highlight: "当大家都被一种标准推着跑，你能停下来确认真正想要的是什么。", blindSpot: "保护空间有时会变成过早退出。一个值得尝试的机会，也可能因为“懒得被安排”而错过。", nextStep: "选一件既好奇又有点抗拒的事，给自己一个小范围体验，提前保留退出方式。", posterText: "你不是谁的背景板。你只是不急着加入所有剧情，而是认真选择自己的生活节奏。", secondaryText: "你也重视自己的空间，不愿为了合群交出全部节奏。" },
+      H: { name: "番外篇主角", tags: ["好奇", "专注", "有自己的世界"], accent: "#785A74", quote: "主线没写的地方，你正在长出自己的世界。", description: "你的投入常常来自一个很私人、很具体的兴趣。别人未必理解你为什么研究这么久、喜欢这么深，但你能在里面找到许多细小的快乐与发现。你不一定想走最常见的路线，更愿意给新鲜想法一次成形的机会。所谓番外，是你的故事不需要挤进所有人共享的模板。", highlight: "别人只看到“奇怪的小爱好”时，你能持续发现其中的细节，做出很有个人味道的东西。", blindSpot: "灵感很多、兴趣很深，却可能有太多开了头的项目；也可能默认别人无法理解，从不尝试解释。", nextStep: "从一个爱好里选一个小成果，在一周内做完，并用三句话介绍给愿意听的人。", posterText: "你有自己的支线、自己的迷恋和发现。别人没有写进主线的世界，也值得成为一部好剧。", secondaryText: "你也会被独特的兴趣点亮，喜欢给日常留一点新鲜可能。" }
+    };
+
+    const state = { view: "home", answers: {}, currentIndex: 0, result: null, storageAvailable: true };
+    const app = document.getElementById("app");
+    const dialog = document.getElementById("posterDialog");
+    const posterStage = document.getElementById("posterStage");
+    const savePoster = document.getElementById("savePoster");
+    const sharePoster = document.getElementById("sharePoster");
+    const closePoster = document.getElementById("closePoster");
+    const toast = document.getElementById("toast");
+    let posterUrl = "";
+    let posterBlob = null;
+    let posterFileName = "";
+    let posterTrigger = null;
+
+    const esc = (value) => String(value).replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#039;" }[char]));
+    const answeredCount = () => Object.keys(state.answers).length;
+    const isComplete = () => questions.every(q => OPTION_IDS.includes(state.answers[q.id]));
+
+    function validAnswers(candidate) {
+      if (!candidate || typeof candidate !== "object") return {};
+      const clean = {};
+      questions.forEach(q => {
+        if (OPTION_IDS.includes(candidate[q.id])) clean[q.id] = candidate[q.id];
+      });
+      return clean;
+    }
+
+    function loadProgress() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const saved = JSON.parse(raw);
+        if (saved.schemaVersion !== 1 || saved.contentVersion !== CONTENT_VERSION) {
+          localStorage.removeItem(STORAGE_KEY);
+          return;
+        }
+        state.answers = validAnswers(saved.answers);
+        const savedIndex = questions.findIndex(q => q.id === saved.currentQuestionId);
+        state.currentIndex = savedIndex >= 0 ? savedIndex : Math.min(answeredCount(), questions.length - 1);
+      } catch (error) {
+        state.storageAvailable = false;
+        state.answers = {};
+        state.currentIndex = 0;
+      }
+    }
+
+    function saveProgress() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          schemaVersion: 1,
+          contentVersion: CONTENT_VERSION,
+          answers: state.answers,
+          currentQuestionId: questions[state.currentIndex].id,
+          updatedAt: new Date().toISOString()
+        }));
+      } catch (error) {
+        state.storageAvailable = false;
+      }
+    }
+
+    function clearProgress() {
+      state.answers = {};
+      state.currentIndex = 0;
+      state.result = null;
+      try { localStorage.removeItem(STORAGE_KEY); } catch (error) { state.storageAvailable = false; }
+    }
+
+    function calculateResult(answerSet) {
+      if (questions.length !== 16) throw new Error("Invalid question count");
+      const scores = Object.fromEntries(TYPE_IDS.map(id => [id, 0]));
+      const lastSeen = Object.fromEntries(TYPE_IDS.map(id => [id, -1]));
+      questions.forEach((question, index) => {
+        const option = question.options.find(item => item.id === answerSet[question.id]);
+        if (!option) throw new Error("Incomplete or invalid answers");
+        scores[option.typeId] += 1;
+        lastSeen[option.typeId] = index;
+      });
+      const ranked = [...TYPE_IDS].sort((a, b) => scores[b] - scores[a] || lastSeen[b] - lastSeen[a] || a.localeCompare(b));
+      return {
+        main: ranked[0],
+        secondary: scores[ranked[1]] > 0 ? ranked[1] : null,
+        scores,
+        tiedForMain: ranked.filter(id => scores[id] === scores[ranked[0]]).length > 1
+      };
+    }
+
+    function renderHome() {
+      state.view = "home";
+      const count = answeredCount();
+      const complete = isComplete();
+      const mainLabel = count > 0 && !complete ? `继续我的选角（第${Math.min(state.currentIndex + 1, 16)}/16题）` : "领取我的剧本";
+      app.innerHTML = `
+        <section class="screen" id="homeScreen" tabindex="-1">
+          <header class="masthead">
+            <p class="eyebrow">LIFE SCRIPT · 人生选角室</p>
+            <span class="ticket-no">NO. 0016</span>
+          </header>
+          <div class="home-content">
+            <div class="clapper" aria-hidden="true"></div>
+            <h1>如果人生是一部剧，<br>你拿的是什么剧本？</h1>
+            <p class="lede">有人开场就自带高光，有人到第21集才开始翻盘。<br>16个生活片段，看看这次你会被选为什么角色。</p>
+            <div class="actions">
+              <button class="button" id="startQuiz" type="button">${mainLabel}</button>
+              ${count > 0 && !complete ? '<button class="button secondary" id="restartQuiz" type="button">重新开始</button>' : ''}
+              ${complete ? '<button class="button secondary" id="viewLast" type="button">查看上次剧本</button>' : ''}
+            </div>
+            <p class="meta-line">16题 · 约3分钟 · 无需登录</p>
+          </div>
+          <footer class="home-foot">
+            <span>没有标准答案，按最近的自己来选。</span>
+            <span>根据你的自选答案生成，仅供娱乐与自我探索。</span>
+          </footer>
+        </section>`;
+      document.getElementById("startQuiz").addEventListener("click", () => {
+        if (complete) clearProgress();
+        state.view = "quiz";
+        renderQuiz();
+      });
+      document.getElementById("restartQuiz")?.addEventListener("click", () => { clearProgress(); state.view = "quiz"; renderQuiz(); });
+      document.getElementById("viewLast")?.addEventListener("click", showResult);
+    }
+
+    function renderQuiz() {
+      state.view = "quiz";
+      const question = questions[state.currentIndex];
+      const selected = state.answers[question.id];
+      const totalAnswered = answeredCount();
+      app.innerHTML = `
+        <section class="screen" id="quizScreen" tabindex="-1" aria-labelledby="questionTitle">
+          <header class="quiz-topline">
+            <p class="eyebrow">人生选角室</p>
+            <p class="question-count">${String(state.currentIndex + 1).padStart(2, "0")} / 16</p>
+          </header>
+          <div class="progress-track" role="progressbar" aria-label="答题进度" aria-valuemin="0" aria-valuemax="16" aria-valuenow="${totalAnswered}">
+            <div class="progress-value" style="width:${totalAnswered / 16 * 100}%"></div>
+          </div>
+          <p class="scene-label">SCENE ${String(state.currentIndex + 1).padStart(2, "0")}</p>
+          <h2 class="question-title" id="questionTitle">${esc(question.text)}</h2>
+          <fieldset class="options" aria-label="请选择最像你的选项">
+            <legend hidden>没有正确答案，选最近最像你的那个。</legend>
+            ${question.options.map((option, index) => `
+              <div class="option">
+                <input type="radio" name="answer" id="answer-${option.id}" value="${option.id}" ${selected === option.id ? "checked" : ""}>
+                <label for="answer-${option.id}">
+                  <span class="option-letter">${String.fromCharCode(65 + index)}</span>
+                  <span>${esc(option.text)}</span>
+                  <span class="option-check" aria-hidden="true"></span>
+                </label>
+              </div>`).join("")}
+          </fieldset>
+          <div class="quiz-actions ${state.currentIndex === 0 ? "single" : ""}">
+            ${state.currentIndex > 0 ? '<button class="button secondary" id="previousQuestion" type="button">上一幕</button>' : ''}
+            <button class="button" id="nextQuestion" type="button" ${selected ? "" : "disabled"}>${state.currentIndex === 15 ? "揭晓我的剧本" : "下一幕"}</button>
+          </div>
+        </section>`;
+      app.querySelectorAll('input[name="answer"]').forEach(input => input.addEventListener("change", event => {
+        state.answers[question.id] = event.target.value;
+        saveProgress();
+        app.querySelectorAll(".option input").forEach(node => node.checked = node.value === event.target.value);
+        document.getElementById("nextQuestion").disabled = false;
+        app.querySelector("[role='progressbar']").setAttribute("aria-valuenow", answeredCount());
+        app.querySelector(".progress-value").style.width = `${answeredCount() / 16 * 100}%`;
+      }));
+      document.getElementById("previousQuestion")?.addEventListener("click", () => { state.currentIndex -= 1; saveProgress(); renderQuiz(); focusQuestion(); });
+      document.getElementById("nextQuestion").addEventListener("click", () => {
+        if (!state.answers[question.id]) return;
+        if (state.currentIndex < 15) {
+          state.currentIndex += 1;
+          saveProgress();
+          renderQuiz();
+          focusQuestion();
+        } else {
+          if (!isComplete()) { showToast("还有题目没有完成，请返回补充。"); return; }
+          saveProgress();
+          showResult();
+        }
+      });
+    }
+
+    function focusQuestion() {
+      requestAnimationFrame(() => {
+        document.getElementById("quizScreen")?.focus({ preventScroll: true });
+        window.scrollTo({ top: 0, behavior: "auto" });
+      });
+    }
+
+    function showResult() {
+      if (!isComplete()) { state.view = "quiz"; renderQuiz(); return; }
+      state.result = calculateResult(state.answers);
+      state.view = "result";
+      const main = results[state.result.main];
+      const secondary = state.result.secondary ? results[state.result.secondary] : null;
+      app.innerHTML = `
+        <section class="screen" id="resultScreen" tabindex="-1" style="--accent:${main.accent}" aria-labelledby="resultTitle">
+          <header class="masthead">
+            <p class="eyebrow">LIFE SCRIPT · FINAL CUT</p>
+            <button class="button text" id="backHome" type="button">返回首页</button>
+          </header>
+          <div class="result-head">
+            <p class="eyebrow">你的本季角色已揭晓</p>
+            <h2 class="result-title" id="resultTitle">${esc(main.name)}</h2>
+            <p class="quote">“${esc(main.quote)}”</p>
+            <div class="tags">${main.tags.map(tag => `<span class="tag">${esc(tag)}</span>`).join("")}</div>
+          </div>
+          <p class="result-copy">${esc(main.description)}</p>
+          ${state.result.tiedForMain ? '<p class="tie-note">你在几种角色之间很接近，这次由后面的选择确定主剧本。</p>' : ''}
+          <section class="story-block"><h3>你的高光戏</h3><p>${esc(main.highlight)}</p></section>
+          <section class="story-block"><h3>容易卡住的一幕</h3><p>${esc(main.blindSpot)}</p></section>
+          <section class="story-block next"><h3>下一幕可以试试</h3><p>${esc(main.nextStep)}</p></section>
+          ${secondary ? `<aside class="secondary-result"><strong>你还带一点：${esc(secondary.name)}</strong><p>${esc(secondary.secondaryText)}</p></aside>` : ''}
+          <div class="actions">
+            <button class="button" id="generatePoster" type="button">生成我的剧本海报</button>
+            <button class="button secondary" id="retakeQuiz" type="button">重新选角</button>
+          </div>
+          <details>
+            <summary>这份剧本怎么来的？</summary>
+            <p>我们把你的选择归入8种角色倾向，选择次数最多的成为主剧本。得分并列时，用你在后面情境中的选择决定主剧本。它描述这次回答里的偏好，不判断你的人生。</p>
+          </details>
+          <p class="disclaimer">根据你的自选答案生成，仅供娱乐与自我探索。结果呈现的是当前回答中的行为偏好，不代表未来命运。</p>
+        </section>`;
+      document.getElementById("backHome").addEventListener("click", renderHome);
+      document.getElementById("retakeQuiz").addEventListener("click", () => { clearProgress(); state.view = "quiz"; renderQuiz(); focusQuestion(); });
+      document.getElementById("generatePoster").addEventListener("click", event => openPoster(event.currentTarget));
+      requestAnimationFrame(() => {
+        document.getElementById("resultScreen")?.focus({ preventScroll: true });
+        window.scrollTo({ top: 0, behavior: "auto" });
+      });
+    }
+
+    function wrapLines(ctx, text, maxWidth) {
+      const lines = [];
+      let line = "";
+      for (const char of text) {
+        const trial = line + char;
+        if (line && ctx.measureText(trial).width > maxWidth) { lines.push(line); line = char; }
+        else line = trial;
+      }
+      if (line) lines.push(line);
+      return lines;
+    }
+
+    function drawTextBlock(ctx, text, x, y, maxWidth, lineHeight, maxLines) {
+      const lines = wrapLines(ctx, text, maxWidth).slice(0, maxLines);
+      lines.forEach((line, index) => ctx.fillText(line, x, y + index * lineHeight));
+      return y + lines.length * lineHeight;
+    }
+
+    async function createPoster(resultId) {
+      const data = results[resultId];
+      if (document.fonts?.ready) await document.fonts.ready;
+      const canvas = document.createElement("canvas");
+      canvas.width = 1080;
+      canvas.height = 1440;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) throw new Error("Canvas unavailable");
+
+      ctx.fillStyle = "#F6F0E6";
+      ctx.fillRect(0, 0, 1080, 1440);
+      ctx.globalAlpha = .075;
+      ctx.fillStyle = "#71665D";
+      for (let y = 22; y < 1440; y += 31) for (let x = 18 + (y % 3) * 6; x < 1080; x += 37) ctx.fillRect(x, y, 2, 2);
+      ctx.globalAlpha = 1;
+
+      ctx.fillStyle = "#292521";
+      for (let y = 0; y < 1440; y += 34) { ctx.fillRect(0, y, 22, 17); ctx.fillRect(1058, y, 22, 17); }
+      ctx.strokeStyle = "#D9CCBC";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(62, 62, 956, 1316);
+
+      ctx.textBaseline = "top";
+      ctx.fillStyle = "#A83D45";
+      ctx.font = "800 25px system-ui, 'Microsoft YaHei', sans-serif";
+      ctx.fillText("LIFE SCRIPT · 人生选角室", 100, 108);
+      ctx.fillStyle = "#71665D";
+      ctx.font = "500 28px system-ui, 'Microsoft YaHei', sans-serif";
+      ctx.fillText("如果人生是一部剧", 100, 192);
+      ctx.font = "700 34px system-ui, 'Microsoft YaHei', sans-serif";
+      ctx.fillStyle = "#292521";
+      ctx.fillText("我拿到的剧本是", 100, 242);
+
+      ctx.fillStyle = data.accent;
+      ctx.font = "900 92px 'Songti SC', 'STSong', serif";
+      const titleLines = wrapLines(ctx, data.name, 860);
+      titleLines.slice(0, 2).forEach((line, index) => ctx.fillText(line, 100, 330 + index * 108));
+      const titleBottom = 330 + Math.min(titleLines.length, 2) * 108;
+
+      ctx.strokeStyle = data.accent;
+      ctx.lineWidth = 5;
+      ctx.beginPath(); ctx.moveTo(100, titleBottom + 12); ctx.lineTo(980, titleBottom + 12); ctx.stroke();
+
+      ctx.fillStyle = "#292521";
+      ctx.font = "700 38px 'Songti SC', 'STSong', serif";
+      const quoteBottom = drawTextBlock(ctx, `“${data.quote}”`, 100, titleBottom + 66, 850, 58, 3);
+
+      let tagX = 100;
+      const tagY = quoteBottom + 38;
+      data.tags.forEach(tag => {
+        ctx.font = "800 25px system-ui, 'Microsoft YaHei', sans-serif";
+        const width = ctx.measureText(tag).width + 44;
+        ctx.strokeStyle = data.accent;
+        ctx.lineWidth = 2;
+        ctx.strokeRect(tagX, tagY, width, 54);
+        ctx.fillStyle = data.accent;
+        ctx.fillText(tag, tagX + 22, tagY + 11);
+        tagX += width + 16;
+      });
+
+      ctx.fillStyle = "#292521";
+      ctx.font = "500 33px system-ui, 'Microsoft YaHei', sans-serif";
+      drawTextBlock(ctx, data.posterText, 100, tagY + 106, 850, 56, 5);
+
+      ctx.save();
+      ctx.translate(900, 1080);
+      ctx.rotate(-9 * Math.PI / 180);
+      ctx.strokeStyle = data.accent;
+      ctx.lineWidth = 5;
+      ctx.beginPath(); ctx.arc(0, 0, 82, 0, Math.PI * 2); ctx.stroke();
+      ctx.fillStyle = data.accent;
+      ctx.textAlign = "center";
+      ctx.font = "900 22px ui-monospace, monospace";
+      ctx.fillText("CAST", 0, -26);
+      ctx.fillText("SELECTED", 0, 12);
+      ctx.restore();
+
+      ctx.textAlign = "left";
+      ctx.fillStyle = "#292521";
+      ctx.font = "800 38px 'Songti SC', 'STSong', serif";
+      ctx.fillText("我的人生，由我继续写。", 100, 1210);
+      ctx.fillStyle = "#71665D";
+      ctx.font = "500 23px system-ui, 'Microsoft YaHei', sans-serif";
+      ctx.fillText("娱乐测试 · 根据自选答案生成", 100, 1290);
+      ctx.textAlign = "right";
+      ctx.font = "700 20px ui-monospace, monospace";
+      ctx.fillText("FINAL CUT / 01", 980, 1292);
+
+      return new Promise((resolve, reject) => canvas.toBlob(blob => blob ? resolve({ blob, canvas }) : reject(new Error("Poster export failed")), "image/png"));
+    }
+
+    async function openPoster(trigger) {
+      posterTrigger = trigger;
+      posterStage.innerHTML = '<p class="meta-line">正在生成海报…</p>';
+      savePoster.disabled = true;
+      sharePoster.hidden = true;
+      dialog.showModal();
+      try {
+        const generated = await createPoster(state.result.main);
+        if (posterUrl) URL.revokeObjectURL(posterUrl);
+        posterBlob = generated.blob;
+        posterUrl = URL.createObjectURL(posterBlob);
+        posterFileName = `我的人生剧本_${results[state.result.main].name}.png`;
+        posterStage.innerHTML = `<img class="poster-preview" src="${posterUrl}" alt="${esc(results[state.result.main].name)}剧本分享海报，1080乘1440像素">`;
+        savePoster.disabled = false;
+        try {
+          const file = new File([posterBlob], posterFileName, { type: "image/png" });
+          sharePoster.hidden = !(navigator.share && navigator.canShare && navigator.canShare({ files: [file] }));
+        } catch (error) { sharePoster.hidden = true; }
+      } catch (error) {
+        posterStage.innerHTML = '<div class="error-box">海报生成失败，请关闭后重试。你的测试结果仍会保留。</div>';
+        savePoster.disabled = true;
+      }
+    }
+
+    function closePosterDialog() {
+      dialog.close();
+      posterTrigger?.focus();
+      if (posterUrl) { URL.revokeObjectURL(posterUrl); posterUrl = ""; }
+      posterBlob = null;
+    }
+
+    savePoster.addEventListener("click", () => {
+      if (!posterUrl) return;
+      const link = document.createElement("a");
+      link.href = posterUrl;
+      link.download = posterFileName;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      showToast("海报已开始保存。");
+    });
+    sharePoster.addEventListener("click", async () => {
+      if (!posterBlob) return;
+      try {
+        const file = new File([posterBlob], posterFileName, { type: "image/png" });
+        await navigator.share({ files: [file], title: "我的人生剧本" });
+      } catch (error) {
+        if (error?.name !== "AbortError") showToast("暂时无法分享，请先保存图片。");
+      }
+    });
+    closePoster.addEventListener("click", closePosterDialog);
+    dialog.addEventListener("cancel", event => { event.preventDefault(); closePosterDialog(); });
+
+    let toastTimer = 0;
+    function showToast(message) {
+      window.clearTimeout(toastTimer);
+      toast.textContent = message;
+      toast.hidden = false;
+      toastTimer = window.setTimeout(() => { toast.hidden = true; }, 2200);
+    }
+
+    function runSelfTests() {
+      const counts = Object.fromEntries(TYPE_IDS.map(id => [id, 0]));
+      questions.forEach(q => q.options.forEach(option => counts[option.typeId] += 1));
+      if (questions.length !== 16 || questions.some(q => q.options.length !== 4)) throw new Error("Question structure test failed");
+      if (TYPE_IDS.some(id => counts[id] !== 8)) throw new Error("Mapping balance test failed");
+      const allA = Object.fromEntries(questions.map(q => [q.id, "a"]));
+      const caseA = calculateResult(allA);
+      if (caseA.main !== "C" || caseA.secondary !== "H") throw new Error("All-A scoring test failed");
+      const total = Object.values(caseA.scores).reduce((sum, score) => sum + score, 0);
+      if (total !== 16) throw new Error("Score total test failed");
+      TYPE_IDS.forEach(typeId => {
+        const answers = {};
+        questions.forEach(q => {
+          const hit = q.options.find(option => option.typeId === typeId);
+          const fallback = q.options.find(option => option.typeId !== typeId);
+          answers[q.id] = (hit || fallback).id;
+        });
+        const result = calculateResult(answers);
+        if (result.main !== typeId || result.scores[typeId] !== 8) throw new Error(`Reachability test failed: ${typeId}`);
+      });
+      document.documentElement.dataset.selftest = "passed";
+    }
+
+    async function runBrowserSelfTests() {
+      if (!new URLSearchParams(location.search).has("selftest")) return;
+      try {
+        for (const typeId of TYPE_IDS) {
+          const generated = await createPoster(typeId);
+          if (generated.canvas.width !== 1080 || generated.canvas.height !== 1440 || !generated.blob.size) {
+            throw new Error(`Poster test failed: ${typeId}`);
+          }
+        }
+        document.documentElement.dataset.posterSelftest = "passed";
+      } catch (error) {
+        document.documentElement.dataset.posterSelftest = "failed";
+        console.error(error);
+      }
+    }
+
+    loadProgress();
+    try { runSelfTests(); } catch (error) { document.documentElement.dataset.selftest = "failed"; console.error(error); }
+    renderHome();
+    runBrowserSelfTests();
+
+    window.__LIFE_SCRIPT__ = { questions, results, calculateResult, createPoster };
+  })();
+  </script>
+</body>
+</html>
